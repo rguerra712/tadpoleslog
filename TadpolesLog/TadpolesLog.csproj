@@ -51,6 +51,7 @@
     <Compile Include="Clients\BaseClient.cs" />
     <Compile Include="Clients\TadpolesClient.cs" />
     <Compile Include="Dtos\LoginResult.cs" />
+    <Compile Include="Dtos\ValidationResult.cs" />
     <Compile Include="Inputs\LoginCredentials.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

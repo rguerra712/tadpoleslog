@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 namespace TadpolesLog.Clients
 {
     public abstract class BaseClient
     {
         protected abstract Uri Domain { get; }
-        protected HttpClient Client { get; private set; }
+        protected virtual HttpClient Client { get; }
 
         protected BaseClient(HttpClient client)
         {
@@ -27,6 +28,17 @@ namespace TadpolesLog.Clients
             request.Headers.Add("X-Requested-With", "XMLHttpRequest");
             request.Headers.Connection.Add("Keep-Alive");
             return request;
+        }
+
+        protected async virtual Task<HttpResponseMessage> GetAndValidateResponse(HttpRequestMessage request)
+        {
+            var response = await Client.SendAsync(request);
+            var responseContent = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"Unable to login: {response.StatusCode} {responseContent}");
+            }
+            return response;
         }
     }
 }
