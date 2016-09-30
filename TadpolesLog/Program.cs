@@ -13,7 +13,7 @@ namespace TadpolesLog
             var client = new HttpClient();
             var loginClient = new BrightHorizonsClient(client);
             var loginResult = loginClient.Login(loginCredentials.UserName, loginCredentials.Password);
-            Console.WriteLine(loginResult.Result.Cookie);
+            Console.WriteLine(loginResult.Result.Token);
         }
     }
 }

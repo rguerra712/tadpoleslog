@@ -7,18 +7,17 @@ using TadpolesLog.Dtos;
 
 namespace TadpolesLog.Clients
 {
-    public class BrightHorizonsClient
+    public class BrightHorizonsClient : BaseClient
     {
-        private HttpClient _httpClient;
+        protected override Uri Domain => new Uri("https://familyinfocenter.brighthorizons.com");
 
-        public BrightHorizonsClient(HttpClient httpClient)
+        public BrightHorizonsClient(HttpClient httpClient) : base(httpClient)
         {
-            _httpClient = httpClient;
         }
 
         public async Task<LoginResult> Login(string username, string password)
         {
-            const string requestUri = @"https://familyinfocenter.brighthorizons.com/mybrightday/login";
+            const string requestUri = @"/mybrightday/login";
             var request = new HttpRequestMessage(HttpMethod.Post, requestUri);
             request.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("identity"));
             request.Headers.Add("X-Titanium-Id", "e59d2869-fb2e-4ec5-abfe-ec3a3f006eea");
@@ -31,17 +30,18 @@ namespace TadpolesLog.Clients
                 { "response", "jwt"},
             });
             request.Content = content;
-            var response = await _httpClient.SendAsync(request);
+            var response = await Client.SendAsync(request);
             var responseContext = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode)
             {
-                throw new Exception(string.Format("Unable to login: {0} {1}", 
-                    response.StatusCode, responseContext));
+                throw new Exception($"Unable to login: {response.StatusCode} {responseContext}");
             }
             return new LoginResult
             {
-                Cookie = responseContext
+                Token = responseContext,
+                UserName = username
             };
         }
+
     }
 }

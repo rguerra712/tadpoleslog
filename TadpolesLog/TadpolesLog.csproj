@@ -48,6 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\BrightHorizonsClient.cs" />
+    <Compile Include="Clients\BaseClient.cs" />
+    <Compile Include="Clients\TadpolesClient.cs" />
     <Compile Include="Dtos\LoginResult.cs" />
     <Compile Include="Inputs\LoginCredentials.cs" />
     <Compile Include="Program.cs" />
