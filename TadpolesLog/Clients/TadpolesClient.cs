@@ -22,6 +22,15 @@ namespace TadpolesLog.Clients
                 { "token", loginResult.Token},
             });
             var response = await GetAndValidateResponse(request);
+            var cookie = ExtractCookieFrom(response);
+            return new ValidationResult
+            {
+                Cookie = cookie
+            };
+        }
+
+        private static string ExtractCookieFrom(HttpResponseMessage response)
+        {
             IEnumerable<string> cookieValues;
             var doesCookieExist = response.Headers.TryGetValues("Set-Cookie", out cookieValues);
             var cookies = cookieValues as string[] ?? cookieValues.ToArray();
@@ -33,10 +42,13 @@ namespace TadpolesLog.Clients
             {
                 throw new Exception("Unable to process more than one cookie value");
             }
-            return new ValidationResult
+            var cookie = cookies.Single();
+            var semicolonIndex = cookie.IndexOf(";", StringComparison.Ordinal);
+            if (semicolonIndex > 0)
             {
-                Cookie = cookies.Single()
-            };
+                cookie = cookie.Substring(0, semicolonIndex);
+            }
+            return cookie;
         }
     }
 }
