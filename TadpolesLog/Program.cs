@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http;
+using TadpolesLog.Clients;
+using TadpolesLog.Inputs;
 
 namespace TadpolesLog
 {
@@ -10,6 +9,11 @@ namespace TadpolesLog
     {
         static void Main(string[] args)
         {
+            var loginCredentials = LoginCredentials.ExtractFrom(args);
+            var client = new HttpClient();
+            var loginClient = new BrightHorizonsClient(client);
+            var loginResult = loginClient.Login(loginCredentials.UserName, loginCredentials.Password);
+            Console.WriteLine(loginResult.Result.Cookie);
         }
     }
 }
