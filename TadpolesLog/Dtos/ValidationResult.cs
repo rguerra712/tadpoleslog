@@ -1,7 +1,9 @@
-﻿namespace TadpolesLog.Dtos
+﻿using System.Collections.Generic;
+
+namespace TadpolesLog.Dtos
 {
     public class ValidationResult
     {
-        public string Cookie { get; set; } 
+        public KeyValuePair<string, string> Cookie { get; set; } 
     }
 }

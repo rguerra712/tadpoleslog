@@ -10,12 +10,11 @@ namespace TadpolesLog
         static void Main(string[] args)
         {
             var loginCredentials = LoginCredentials.ExtractFrom(args);
-            var client = new HttpClient();
-            var loginClient = new BrightHorizonsClient(client);
+            var loginClient = new BrightHorizonsClient();
             var loginResult = loginClient.Login(loginCredentials.UserName, loginCredentials.Password);
-            var tadpolesClient = new TadpolesClient(client);
+            var tadpolesClient = new TadpolesClient();
             var validationResult = tadpolesClient.ValidateToken(loginResult.Result);
-
+            validationResult = tadpolesClient.ValidateLogin(validationResult.Result);
             Console.WriteLine(validationResult.Result.Cookie);
         }
     }

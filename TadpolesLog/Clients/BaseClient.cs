@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -9,10 +10,14 @@ namespace TadpolesLog.Clients
     {
         protected abstract Uri Domain { get; }
         protected virtual HttpClient Client { get; }
+        protected CookieContainer Cookies { get; }
 
-        protected BaseClient(HttpClient client)
+        protected BaseClient()
         {
-            Client = client;
+            var handler = new HttpClientHandler();
+            Cookies = new CookieContainer();
+            handler.CookieContainer = Cookies;
+            Client = new HttpClient(handler);
         }
 
         private Uri BuildUrl(string relativeUrl)

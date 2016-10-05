@@ -10,10 +10,6 @@ namespace TadpolesLog.Clients
     {
         protected override Uri Domain => new Uri("https://familyinfocenter.brighthorizons.com");
 
-        public BrightHorizonsClient(HttpClient httpClient) : base(httpClient)
-        {
-        }
-
         public async Task<LoginResult> Login(string username, string password)
         {
             const string requestUri = @"/mybrightday/login";
