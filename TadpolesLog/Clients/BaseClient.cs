@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -9,16 +10,7 @@ namespace TadpolesLog.Clients
     public abstract class BaseClient
     {
         protected abstract Uri Domain { get; }
-        protected virtual HttpClient Client { get; }
-        protected CookieContainer Cookies { get; }
-
-        protected BaseClient()
-        {
-            var handler = new HttpClientHandler();
-            Cookies = new CookieContainer();
-            handler.CookieContainer = Cookies;
-            Client = new HttpClient(handler);
-        }
+        private readonly IDictionary<string, string> _cookies = new Dictionary<string, string>();
 
         private Uri BuildUrl(string relativeUrl)
         {
@@ -35,15 +27,33 @@ namespace TadpolesLog.Clients
             return request;
         }
 
+        protected virtual void AddCookie(string key, string value)
+        {
+            _cookies.Add(key, value);
+        }
+
         protected async virtual Task<HttpResponseMessage> GetAndValidateResponse(HttpRequestMessage request)
         {
-            var response = await Client.SendAsync(request);
+            var client = BuildClient();
+            _cookies.Clear();
+            var response = await client.SendAsync(request);
             var responseContent = await response.Content.ReadAsStringAsync();
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Unable to login: {response.StatusCode} {responseContent}");
             }
             return response;
+        }
+
+        private HttpClient BuildClient()
+        {
+            var handler = new HttpClientHandler {CookieContainer = new CookieContainer()};
+            foreach (var cookie in _cookies)
+            {
+                handler.CookieContainer.Add(Domain, new Cookie(cookie.Key, cookie.Value));
+            }
+            var client = new HttpClient(handler);
+            return client;
         }
     }
 }

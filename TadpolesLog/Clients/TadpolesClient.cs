@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using TadpolesLog.Dtos;
 
 namespace TadpolesLog.Clients
@@ -30,7 +30,7 @@ namespace TadpolesLog.Clients
         public async Task<ValidationResult> ValidateLogin(ValidationResult jwtValidationResult)
         {
             var request = BuildRequest("/remote/v1/athome/admit");
-            AddCookie(jwtValidationResult.Cookie.Key, jwtValidationResult.Cookie.Value);
+            AddCookie(jwtValidationResult);
             request.Content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
                 { "available_memory", "9915384" },
@@ -55,17 +55,24 @@ namespace TadpolesLog.Clients
             };
         }
 
+        public async Task<ChildDetailsResult> GetChildDetails(ValidationResult validation)
+        {
+            var request = BuildRequest("/remote/v1/parameters?include_all_kids=true&include_guardians=True");
+            request.Method = HttpMethod.Get;
+            AddCookie(validation);
+            var response = await GetAndValidateResponse(request);
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<ChildDetailsResult>(content);
+        }
+
         public async void LogReport(string report)
         {
             throw new NotImplementedException();
         }
 
-        private void AddCookie(string key, string value)
+        private void AddCookie(ValidationResult validationResult)
         {
-            if (key == null) throw new ArgumentNullException(nameof(key));
-            if (value == null) throw new ArgumentNullException(nameof(value));
-
-            Cookies.Add(new Cookie(key, value, "/", Domain.Host));
+            AddCookie(validationResult.Cookie.Key, validationResult.Cookie.Value);
         }
 
         private static KeyValuePair<string, string> ExtractCookieFrom(HttpResponseMessage response)

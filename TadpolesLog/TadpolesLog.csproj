@@ -37,6 +37,10 @@
       <HintPath>..\packages\Args.1.1.2\lib\Net40\Args.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -50,7 +54,9 @@
     <Compile Include="Clients\BrightHorizonsClient.cs" />
     <Compile Include="Clients\BaseClient.cs" />
     <Compile Include="Clients\TadpolesClient.cs" />
+    <Compile Include="Dtos\ChildDetailsResult.cs" />
     <Compile Include="Dtos\LoginResult.cs" />
+    <Compile Include="Dtos\Membership.cs" />
     <Compile Include="Dtos\ValidationResult.cs" />
     <Compile Include="Inputs\LoginCredentials.cs" />
     <Compile Include="Program.cs" />

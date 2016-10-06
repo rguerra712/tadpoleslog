@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Net.Http;
+using Newtonsoft.Json;
 using TadpolesLog.Clients;
 using TadpolesLog.Inputs;
 
@@ -15,7 +15,8 @@ namespace TadpolesLog
             var tadpolesClient = new TadpolesClient();
             var validationResult = tadpolesClient.ValidateToken(loginResult.Result);
             validationResult = tadpolesClient.ValidateLogin(validationResult.Result);
-            Console.WriteLine(validationResult.Result.Cookie);
+            var childResult = tadpolesClient.GetChildDetails(validationResult.Result);
+            Console.WriteLine(JsonConvert.SerializeObject(childResult));
         }
     }
 }
