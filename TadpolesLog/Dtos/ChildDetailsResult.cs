@@ -4,6 +4,6 @@ namespace TadpolesLog.Dtos
 {
     public class ChildDetailsResult
     {
-        public IEnumerable<Membership> ChildId { get; set; } 
+        public IEnumerable<Membership> Memberships { get; set; } 
     }
 }
