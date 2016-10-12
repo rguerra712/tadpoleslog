@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using TadpolesLog.Dtos;
+using TadpolesLog.Extensions;
 
 namespace TadpolesLog.Clients
 {
@@ -58,16 +61,35 @@ namespace TadpolesLog.Clients
         public async Task<ChildDetailsResult> GetChildDetails(ValidationResult validation)
         {
             var request = BuildRequest("/remote/v1/parameters?include_all_kids=true&include_guardians=True");
-            request.Method = HttpMethod.Get;
             AddCookie(validation);
             var response = await GetAndValidateResponse(request);
             var content = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<ChildDetailsResult>(content);
         }
 
-        public async void LogReport(string report)
+        public async Task<EventsResult> GetEventsSince(DateTime since, ValidationResult validation)
         {
-            throw new NotImplementedException();
+            var request = BuildRequest("/remote/v1/events?num_events=78&state=client&direction=newer&latest_create_time=" + since.ToEpochTime());
+            AddCookie(validation);
+            var response = await GetAndValidateResponse(request);
+            var content = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<EventsResult>(content);
+        }
+
+        public void LogReport(ValidationResult validationResult,
+            Membership membership,
+            Dependant dependant,
+            params EntryInput[] entries)
+        {
+            var request = BuildRequest("/remote/v1/daily_report/parent");
+            AddCookie(validationResult);
+            var log = new DailyLogInput(membership, dependant, entries);
+            var serialized = JsonConvert.SerializeObject(log);
+            var encoded = $"daily_report={WebUtility.UrlEncode(serialized)}";
+            request.Content = new StringContent(encoded, Encoding.UTF8, "application/x-www-form-urlencoded");
+            var response = GetAndValidateResponse(request).Result;
+            Console.WriteLine(response.StatusCode);
+            Console.WriteLine(response.Content.ReadAsStringAsync().Result);
         }
 
         private void AddCookie(ValidationResult validationResult)

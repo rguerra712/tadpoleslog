@@ -55,12 +55,21 @@
     <Compile Include="Clients\BaseClient.cs" />
     <Compile Include="Clients\TadpolesClient.cs" />
     <Compile Include="Dtos\ChildDetailsResult.cs" />
+    <Compile Include="Dtos\DailyLogInput.cs" />
+    <Compile Include="Dtos\Dependant.cs" />
+    <Compile Include="Dtos\EventsResult.cs" />
     <Compile Include="Dtos\LoginResult.cs" />
     <Compile Include="Dtos\Membership.cs" />
+    <Compile Include="Dtos\QuietTime.cs" />
+    <Compile Include="Dtos\RegistrationInput.cs" />
+    <Compile Include="Dtos\SingleEventResult.cs" />
     <Compile Include="Dtos\ValidationResult.cs" />
+    <Compile Include="Dtos\EntryInput.cs" />
+    <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Inputs\LoginCredentials.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SystemTime.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
